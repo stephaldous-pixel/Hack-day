@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hello World</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      /* sunset sky, then sea, then sand */
+      background: linear-gradient(180deg,
+        #ff9a5a 0%, #ffcf71 22%, #7fd8e8 42%,
+        #29b6d8 62%, #1495b8 74%,
+        #f6dfa8 78%, #eccb87 100%);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+      color: #4a2c2a;
+    }
+    .sun {
+      position: absolute;
+      top: 6%;
+      right: 12%;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff6b0 0%, #ffd23f 55%, #ff9f1c 100%);
+      box-shadow: 0 0 60px 20px rgba(255, 200, 80, 0.6);
+      animation: glow 5s ease-in-out infinite;
+    }
+    .waves {
+      position: absolute;
+      top: 66%;
+      left: -40px;
+      right: -40px;
+      display: flex;
+      justify-content: space-around;
+      font-size: 32px;
+      opacity: 0.85;
+      animation: drift 6s ease-in-out infinite;
+      user-select: none;
+    }
+    /* fish swim right to left through the sea, bobbing as they go */
+    .fish {
+      position: absolute;
+      left: 0;
+      font-size: 34px;
+      animation: swim 16s linear infinite;
+      user-select: none;
+    }
+    .fish span {
+      display: inline-block;
+      position: relative;
+      animation: happy 3s ease-in-out infinite;
+    }
+    /* a little trail of bubbles rising behind each fish */
+    .fish span::after {
+      content: "°o";
+      position: absolute;
+      left: 100%;
+      top: -4px;
+      font-size: 0.45em;
+      color: rgba(255, 255, 255, 0.9);
+      animation: bubbles 1.6s ease-out infinite;
+    }
+    /* green islands sitting on the horizon */
+    .island {
+      position: absolute;
+      top: 33%;
+      height: 10%;
+      width: 34%;
+      border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+      background: radial-gradient(ellipse at 50% 100%, #1f7a3a 0%, #2e9b4a 55%, #4cbf63 100%);
+      box-shadow: inset 0 6px 14px rgba(255, 255, 255, 0.15);
+    }
+    .island.left { left: -6%; }
+    .island.right { right: -8%; width: 28%; height: 8%; top: 35%; }
+    /* dense jungle growing up both sides of the beach */
+    .jungle {
+      position: absolute;
+      bottom: 3%;
+      width: clamp(120px, 18vw, 260px);
+      height: 62%;
+      display: flex;
+      flex-wrap: wrap-reverse;
+      align-content: flex-start;
+      font-size: 58px;
+      line-height: 1;
+      user-select: none;
+      filter: drop-shadow(0 6px 10px rgba(10, 60, 30, 0.35));
+    }
+    .jungle.left { left: -10px; }
+    .jungle.right { right: -10px; justify-content: flex-end; }
+    .jungle span {
+      display: inline-block;
+      margin: -4px -8px;
+      transform-origin: bottom center;
+      animation: sway 4s ease-in-out infinite;
+    }
+    .jungle span:nth-child(3n) { animation-delay: 1.3s; font-size: 70px; }
+    .jungle span:nth-child(4n) { animation-delay: 0.7s; font-size: 48px; }
+    /* leaves hanging down from the top corners */
+    .canopy {
+      position: absolute;
+      top: -40px;
+      font-size: 110px;
+      user-select: none;
+      animation: dangle 6s ease-in-out infinite;
+      filter: drop-shadow(0 8px 10px rgba(10, 60, 30, 0.35));
+    }
+    .palm {
+      position: absolute;
+      bottom: 6%;
+      font-size: 120px;
+      transform-origin: bottom center;
+      animation: sway 5s ease-in-out infinite;
+      filter: drop-shadow(0 8px 8px rgba(60, 40, 20, 0.3));
+      user-select: none;
+    }
+    .palm.mid { font-size: 90px; }
+    .palm.far { font-size: 60px; bottom: 22%; opacity: 0.9; }
+    .extra {
+      position: absolute;
+      font-size: 40px;
+      filter: drop-shadow(0 4px 6px rgba(60, 40, 20, 0.25));
+      user-select: none;
+    }
+    /* the parrot tours the sky, turning round at each end */
+    .parrot { animation: fly 14s ease-in-out infinite; }
+    .parrot span {
+      display: inline-block;
+      position: relative;
+      animation: flutter 3.5s ease-in-out infinite;
+    }
+    /* happy little song notes */
+    .parrot span::after {
+      content: "♪ ♫";
+      position: absolute;
+      left: -18px;
+      top: -10px;
+      font-size: 0.45em;
+      color: #fff;
+      white-space: nowrap;
+      animation: notes 1.8s ease-out infinite;
+    }
+    .card {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 48px 64px;
+      margin: 16px;
+      border-radius: 28px;
+      border: 6px solid transparent;
+      background-image: linear-gradient(#fffaf3, #fffaf3),
+        linear-gradient(90deg, #ff5f6d, #ffc371, #f9f586, #47e891, #4fc3f7, #b388ff);
+      background-origin: border-box;
+      background-clip: padding-box, border-box;
+      box-shadow: 0 12px 32px rgba(20, 80, 110, 0.3);
+    }
+    .friends {
+      font-size: 96px;
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+    }
+    .friends span {
+      display: inline-block;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    .friends span:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+    h1 {
+      margin: 16px 0 0;
+      font-size: 2.75rem;
+      background: linear-gradient(90deg, #ff5f6d, #ff9f43, #f6c90e, #2ecc71, #3498db, #9b59b6);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .sparkles {
+      margin-top: 12px;
+      font-size: 1.75rem;
+      letter-spacing: 8px;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes sway {
+      0%, 100% { transform: rotate(-4deg); }
+      50% { transform: rotate(4deg); }
+    }
+    @keyframes dangle {
+      0%, 100% { rotate: -5deg; }
+      50% { rotate: 5deg; }
+    }
+    @keyframes drift {
+      0%, 100% { transform: translateX(0); }
+      50% { transform: translateX(30px); }
+    }
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 60px 20px rgba(255, 200, 80, 0.6); }
+      50% { box-shadow: 0 0 80px 30px rgba(255, 200, 80, 0.8); }
+    }
+    @keyframes fly {
+      0% { transform: translate(0, 0) scaleX(-1); }
+      20% { transform: translate(22vw, 7vh) scaleX(-1); }
+      35% { transform: translate(44vw, -2vh) scaleX(-1); }
+      47% { transform: translate(60vw, 5vh) scaleX(-1); }
+      50% { transform: translate(60vw, 5vh) scaleX(1); }
+      70% { transform: translate(34vw, 11vh) scaleX(1); }
+      90% { transform: translate(6vw, 2vh) scaleX(1); }
+      97% { transform: translate(0, 0) scaleX(1); }
+      100% { transform: translate(0, 0) scaleX(-1); }
+    }
+    /* quick flaps, then a joyful loop-the-loop */
+    @keyframes flutter {
+      0%, 10%, 20%, 30%, 40%, 50% { transform: translateY(0) rotate(-10deg); }
+      5%, 15%, 25%, 35%, 45% { transform: translateY(-6px) rotate(10deg); }
+      60% { transform: translateY(-14px) rotate(0); }
+      75% { transform: translateY(-24px) rotate(-360deg); }
+      90%, 100% { transform: translateY(0) rotate(-360deg); }
+    }
+    @keyframes notes {
+      0% { transform: translate(0, 0); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translate(-8px, -20px); opacity: 0; }
+    }
+    @keyframes swim {
+      from { transform: translateX(105vw); }
+      to { transform: translateX(-60px); }
+    }
+    /* wiggle along, then a joyful hop and spin */
+    @keyframes happy {
+      0% { transform: translateY(0) rotate(-8deg); }
+      10% { transform: translateY(-5px) rotate(8deg); }
+      20% { transform: translateY(0) rotate(-8deg); }
+      30% { transform: translateY(-5px) rotate(8deg); }
+      40% { transform: translateY(0) rotate(-8deg); }
+      50% { transform: translateY(-5px) rotate(8deg); }
+      60% { transform: translateY(0) rotate(0); }
+      72% { transform: translateY(-28px) rotate(-25deg) scale(1.15); }
+      82% { transform: translateY(-10px) rotate(-360deg) scale(1.1); }
+      90%, 100% { transform: translateY(0) rotate(-368deg); }
+    }
+    @keyframes bubbles {
+      0% { transform: translate(0, 0); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translate(10px, -22px); opacity: 0; }
+    }
+    @media (max-width: 480px) {
+      .card { padding: 32px 24px; }
+      .friends { font-size: 64px; }
+      h1 { font-size: 2rem; }
+      .sun { width: 70px; height: 70px; }
+      .palm { font-size: 72px; }
+      .palm.mid { font-size: 56px; }
+      .palm.far { font-size: 40px; }
+      .extra { font-size: 28px; }
+      .waves { font-size: 22px; }
+      .fish { font-size: 24px; }
+      .jungle { font-size: 38px; height: 50%; }
+      .jungle span:nth-child(3n) { font-size: 46px; }
+      .jungle span:nth-child(4n) { font-size: 32px; }
+      .canopy { font-size: 64px; }
+    }
+  </style>
+</head>
+<body>
+  <div aria-hidden="true">
+    <div class="sun"></div>
+    <div class="waves"><span>🌊</span><span>🌊</span><span>🌊</span><span>🌊</span><span>🌊</span><span>🌊</span><span>🌊</span></div>
+    <span class="fish" style="top: 47%; animation-duration: 18s;"><span>🐠</span></span>
+    <span class="fish" style="top: 53%; animation-duration: 14s; animation-delay: -6s;"><span style="animation-delay: 0.5s;">🐟</span></span>
+    <span class="fish" style="top: 59%; animation-duration: 20s; animation-delay: -11s;"><span style="animation-delay: 1s;">🐡</span></span>
+    <span class="fish" style="top: 50%; animation-duration: 16s; animation-delay: -3s;"><span style="animation-delay: 1.5s;">🐠</span></span>
+    <span class="fish" style="top: 63%; animation-duration: 22s; animation-delay: -15s;"><span style="animation-delay: 0.8s;">🐟</span></span>
+    <span class="fish" style="top: 56%; animation-duration: 12s; animation-delay: -9s; font-size: 26px;"><span style="animation-delay: 0.3s;">🐠</span></span>
+    <div class="island left"></div>
+    <div class="island right"></div>
+    <div class="jungle left"><span>🌿</span><span>🌳</span><span>🍃</span><span>🌺</span><span>🌿</span><span>🪴</span><span>🌱</span><span>🌿</span><span>🌳</span><span>🍃</span><span>🌺</span><span>🌿</span><span>🌱</span><span>🍃</span><span>🌿</span><span>🌳</span><span>🌺</span><span>🌿</span><span>🍃</span><span>🌿</span><span>🌿</span><span>🌳</span><span>🍃</span><span>🌺</span><span>🌿</span><span>🪴</span><span>🌱</span><span>🌿</span><span>🌳</span><span>🍃</span><span>🌺</span><span>🌿</span><span>🌱</span><span>🍃</span><span>🌿</span><span>🌳</span><span>🌺</span><span>🌿</span><span>🍃</span><span>🌿</span></div>
+    <div class="jungle right"><span>🌿</span><span>🍃</span><span>🌳</span><span>🌿</span><span>🌺</span><span>🌱</span><span>🪴</span><span>🌿</span><span>🍃</span><span>🌳</span><span>🌿</span><span>🌺</span><span>🍃</span><span>🌱</span><span>🌿</span><span>🌳</span><span>🌿</span><span>🍃</span><span>🌺</span><span>🌿</span><span>🌿</span><span>🍃</span><span>🌳</span><span>🌿</span><span>🌺</span><span>🌱</span><span>🪴</span><span>🌿</span><span>🍃</span><span>🌳</span><span>🌿</span><span>🌺</span><span>🍃</span><span>🌱</span><span>🌿</span><span>🌳</span><span>🌿</span><span>🍃</span><span>🌺</span><span>🌿</span></div>
+    <span class="canopy" style="left: -20px; transform: rotate(150deg);">🌿</span>
+    <span class="canopy" style="left: 70px; top: -30px; transform: rotate(200deg); font-size: 80px; animation-delay: 1.5s;">🍃</span>
+    <span class="canopy" style="right: -20px; transform: rotate(-150deg) scaleX(-1); animation-delay: 0.8s;">🌿</span>
+    <span class="canopy" style="right: 80px; top: -30px; transform: rotate(-200deg); font-size: 80px; animation-delay: 2.2s;">🍃</span>
+    <span class="palm far" style="left: 24%; animation-delay: 1s;">🌴</span>
+    <span class="palm far" style="right: 26%; animation-delay: 2.2s;">🌴</span>
+    <span class="palm mid" style="left: 12%; animation-delay: 0.6s;">🌴</span>
+    <span class="palm mid" style="right: 13%; animation-delay: 1.8s;">🌴</span>
+    <span class="palm" style="left: 1%;">🌴</span>
+    <span class="palm" style="right: 1%; animation-delay: 1.4s;">🌴</span>
+    <span class="extra parrot" style="top: 10%; left: 10%;"><span>🦜</span></span>
+    <span class="extra" style="bottom: 3%; left: 30%;">🥥</span>
+    <span class="extra" style="bottom: 4%; right: 32%;">🍍</span>
+    <span class="extra" style="bottom: 2%; left: 50%;">🐚</span>
+    <span class="extra" style="bottom: 3%; left: 39%; font-size: 52px;" title="Piña colada">🍹</span>
+    <span class="extra" style="bottom: 3%; right: 22%;">🦀</span>
+  </div>
+  <div class="card">
+    <div class="friends">
+      <span role="img" aria-label="smiling face">😊</span>
+      <span role="img" aria-label="unicorn">🦄</span>
+    </div>
+    <h1>Hello, world!</h1>
+    <div class="sparkles" aria-hidden="true">🌈✨💖✨🌈</div>
+  </div>
+</body>
+</html>
